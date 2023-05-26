@@ -1,0 +1,52 @@
+1.Which manufacturer's planes had the most number of flights? And how many flights?
+
+SELECT manufacturer, COUNT(*) AS flight_count
+FROM planes
+JOIN flights ON planes.tailnum = flights.tailnum
+GROUP BY manufacturer
+ORDER BY flight_count DESC
+LIMIT 1;
+
+2. Which manufacturer's planes had the most number of flying hours? And how many hours?
+
+SELECT manufacturer, SUM(CAST(flights.air_time AS FLOAT)) AS flying_hours
+FROM planes
+JOIN flights ON planes.tailnum = flights.tailnum
+GROUP BY manufacturer
+ORDER BY flying_hours DESC
+LIMIT 1;
+
+
+3. Which plane flew the most number of hours? And how many hours?
+
+SELECT tailnum, SUM(CAST(air_time AS FLOAT)) AS flying_hours
+FROM flights
+GROUP BY tailnum
+ORDER BY flying_hours DESC
+LIMIT 1;
+Which destination had the most delay in flights?
+
+4. SELECT dest, AVG(CAST(arr_delay AS FLOAT)) AS average_delay
+FROM flights
+GROUP BY dest
+ORDER BY average_delay DESC
+LIMIT 1;
+
+5. Which manufacturer's planes had covered the most distance? And how much distance?
+
+SELECT manufacturer, SUM(distance) AS total_distance
+FROM planes
+JOIN flights ON planes.tailnum = flights.tailnum
+GROUP BY manufacturer
+ORDER BY total_distance DESC
+LIMIT 1;
+
+6. Which airport had the most flights on weekends?
+
+SELECT airports.airport, COUNT(*) AS weekend_flight_count
+FROM airports
+JOIN flights ON airports.IATA_CODE = flights.origin
+WHERE EXTRACT(DOW FROM (DATE(flights.year::text || '-' || flights.month::text || '-' || flights.day::text))) IN (0, 6)
+GROUP BY airports.airport
+ORDER BY weekend_flight_count DESC
+LIMIT 1;
